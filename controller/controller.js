@@ -10,10 +10,12 @@ data = await booking.find({},{_id:0,__v:0});
 catch(err){
     console.log(err.message) //logging the error if any
 }
-//if there is no data avaiable then send a response of empty array with status code 404
-if(!data||data.length===0){
-    res.status(404).json({message:"no previous booking found"});
+//if there is no data avaiable then send a response "no previous booking found"
+if(data.length===0){
+    res.send("no previous booking found");
+    return;
 }
+
 //else send the last oject from the collection as response with status code(200)
 res.status(200).send(data[data.length-1])
 
@@ -37,13 +39,15 @@ if(!data){
 }
 //else if the data is succesfully added then give response of the latest document added in the collection with status code 200.
 else{
+   
    booking.find().then((result)=>res.status(200).send(result[result.length-1]))
 
 }
 }
 
-const deleteBooking = async (req,res)=>{
 
+//async deleteBooking function for deleting all the documents in the database
+const deleteBooking = async (req,res)=>{
 try{
  await booking.deleteMany();
 res.send("deleted")
